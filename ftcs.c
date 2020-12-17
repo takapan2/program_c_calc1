@@ -5,10 +5,10 @@
 // }
 
 int main(void){
-    int i,xn=20;
-    int j,tn=2000;
+    int i,xn=40;
+    int j,tn=100;
 
-    double xmax=1.0,tmax=0.10,x,t;
+    double xmax=1.0,tmax=0.050,x,t;
 
     double dx=xmax/xn,dt=tmax/tn,dr=(dt/(dx*dx)),k=1.0;
 
