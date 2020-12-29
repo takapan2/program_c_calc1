@@ -5,14 +5,18 @@ int main(void){
     int n,nmax=5000;
     int nx,nxmax=100;
     int ny,nymax=100;
+    int nt,ntmax=20;
+
 
     int k=0;// kはスイッチ
 
     double xmax=1.0;
     double ymax=1.0;
+    double tmax=10.0;
 
     double x,dx=xmax/nxmax;
     double y,dy=ymax/nymax;
+    double t,dt=tmax/ntmax;
 
     double e1=0.000010,e2=0.000010;
 
@@ -29,21 +33,42 @@ int main(void){
         }
     }
 
-    for(n=0;n<nmax;n++){
+    for(nt=0;nt<ntmax;nt++){
         int k1=0,k2=0;
-        // ωの初期条件代入
+        // ωの境界条件代入
         for(nx=0;nx<nxmax+1;nx++){
             for(ny=0;ny<nymax+1;ny++){
                 if(nx==0){
                     w[nx][ny]=-2.0*f[nx+1][ny]/dx/dx;
-                }else if(nx==nxmax){
+                }else if(nx==nxmax+1){
                     w[nx][ny]=-2.0*f[nx-1][ny]/dx/dx;
+                }else if(ny==nymax+1){
+                    w[nx][ny]=-2.0*f[nx][ny-1]/dy/dy;
                 }else if(ny==0){
-                    w[nx][ny]=-2.0*f[nx][ny+1]/dy/dy;
-                }else if(ny==nymax){
-                    w[nx][ny]=-2.0*(f[nx][ny-1]+dy)/dy/dy;
+                    w[nx][ny]=-2.0*(f[nx][ny+1]-dy)/dy/dy;
                 }
             }
+        }
+
+        for(n=0;n<nmax;n++){
+            for(nx=0;nx<nxmax+1;nx++){
+                for(ny=0;ny<nymax+1;ny++){
+                    F[nx][ny]=f[nx][ny];
+                    if(nx==0||nx==nxmax+1||ny==0){
+                        f[nx][ny]=0.0;
+                        k1++;
+                    }else if(ny==nymax+1){
+                        f[nx][ny]=u;
+                        k1++;
+                    }else{
+                        f[nx][ny]=(f[nx+1][ny]+f[nx][ny+1]+f[nx-1][ny]+f[nx][ny-1])/4.0+dx*dx*w[nx][ny]/4.0;
+                        if(fabs(F[nx][ny]-f[nx][ny])<e2){
+                            k1++;
+                        }
+                    }
+                }
+            }
+
         }
 
         for(nx=1;nx<nxmax;nx++){
@@ -56,29 +81,13 @@ int main(void){
             }
         }
 
-        for(nx=0;nx<nxmax+1;nx++){
-            for(ny=0;ny<nymax+1;ny++){
-                F[nx][ny]=f[nx][ny];
-                if(nx==0||nx==nxmax||ny==0){
-                    f[nx][ny]=0.0;
-                }else if(ny==nymax){
-                    f[nx][ny]=0.0;
-                }else{
-                    f[nx][ny]=(f[nx+1][ny]+f[nx][ny+1]+f[nx-1][ny]+f[nx][ny-1])/4.0+dx*dx*w[nx][ny]/4.0;
-                    if(fabs(F[nx][ny]-f[nx][ny])<e2){
-                        k2=1;
-                    }
-                }
-            }
-        }
-
         if(k1==1&&k2==1){
             k++;
         }
     }
 
-    for(ny=0;ny<nxmax+1;ny++){
-        for(nx=0;nx<nymax+1;nx++){
+    for(nx=0;nx<nxmax+1;nx++){
+        for(ny=0;ny<nymax+1;ny++){
             x=nx*dx;
             y=ny*dy;
             printf("%lf   %lf   %lf\n",x,y,f[nx][ny]);

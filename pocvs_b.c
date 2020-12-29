@@ -77,14 +77,52 @@ int main(void){
         }
     }
 
+    double Bx[nxmax+1][nymax+1];
+    double By[nxmax+1][nymax+1];
+
     for(ny=0;ny<nxmax+1;ny++){
         for(nx=0;nx<nymax+1;nx++){
-            x=nx*dx;
-            y=ny*dy;
-            printf("%lf   %lf   %lf\n",x,y,f[nx][ny]);
+            if(nx!=0&&ny!=0&&nx!=nxmax&&ny!=nymax){
+                if(nx%5==0&&ny%5==0){
+                    double ax,ay;
+
+                    ax=(fabs(f[nx-1][ny]-f[nx][ny])+fabs(f[nx+1][ny]-f[nx][ny]))/2.0;
+                    ay=(fabs(f[nx][ny-1]-f[nx][ny])+fabs(f[nx][ny+1]-f[nx][ny]))/2.0;
+
+                    By[nx][ny]=ax*pow((ax*ax+ay*ay),-0.50)/50.0;
+                    Bx[nx][ny]=ay*pow((ax*ax+ay*ay),-0.50)/50.0;
+
+                    By[nx][ny]=ax*10;
+                    Bx[nx][ny]=ay*10;
+
+                    if(f[nx][ny+1]-f[nx][ny]<0){
+                        Bx[nx][ny]=-Bx[nx][ny];
+                    }
+                    if(f[nx-1][ny]-f[nx][ny]<0){
+                        By[nx][ny]=-By[nx][ny];
+                    }
+                }
+            }
         }
-        printf("\n");
     }
+
+    for(ny=0;ny<nxmax+1;ny++){
+        for(nx=0;nx<nymax+1;nx++){
+            if(nx!=0&&ny!=0){
+                if(nx%5==0||ny%5==0){
+                    x=nx*dx;
+                    y=ny*dy;
+                    printf("%lf   %lf   %lf   %lf\n",x,y,Bx[nx][ny],By[nx][ny]);
+                }
+            }
+        }
+        if(nx!=0&&ny!=0){
+            if(nx%5==0||ny%5==0){
+                printf("\n");
+            }
+        }
+    }
+
 
     return 0;
 }
