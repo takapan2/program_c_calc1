@@ -20,7 +20,7 @@ int main(void){
     double f[nxmax+1][nymax+1],F[nxmax+1][nymax+1];
 
     double u=1.0;
-    double Re=5.0;
+    double Re=500.0;
 
     for(nx=0;nx<nxmax+1;nx++){
         for(ny=0;ny<nymax+1;ny++){
