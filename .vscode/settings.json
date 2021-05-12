@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "__config": "c",
+        "__locale": "c",
+        "__tuple": "c",
+        "algorithm": "c",
+        "array": "c",
+        "atomic": "c",
+        "bitset": "c",
+        "functional": "c",
+        "ios": "c",
+        "locale": "c",
+        "memory": "c",
+        "ostream": "c",
+        "ratio": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "string": "c",
+        "utility": "c",
+        "vector": "c"
+    }
+}
